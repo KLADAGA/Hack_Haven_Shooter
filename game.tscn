@@ -9,16 +9,19 @@ bounce = 0.62
 [sub_resource type="GDScript" id="GDScript_mwb40"]
 script/source = "extends StaticBody2D
 
+
 var back_music:=AudioStreamPlayer.new()
 var Enemy_count=0
 var Score=0
+var timr=0.0
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	back_music.stream=load(\"res://Bounce.wav\")
 	back_music.autoplay=true
-	add_child(back_music)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	#$timr+=delta
+	#$HUD/TIME.text=str(timr)
 	if Enemy_count<5:
 		Enemy_count+=1
 		var blob = preload(\"res://blob.tscn\")
@@ -35,7 +38,7 @@ script/source = "extends CharacterBody2D
 
 const SPEED = 10.0
 const Shoot_delay=3
-var health = 100
+var bullet_amount=0
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed(\"left\"):
@@ -48,7 +51,8 @@ func _physics_process(delta: float) -> void:
 		move_local_y(-SPEED)
 	
 	move_and_collide(velocity*delta)
-	if Input.is_action_pressed(\"click\") :
+	if Input.is_action_pressed(\"click\")&&bullet_amount<500 :
+		bullet_amount+=1
 		var shoot_dir=Vector2.ZERO
 		var rand_vec=Vector2.ZERO
 		rand_vec.x=randf()
@@ -61,7 +65,6 @@ func _physics_process(delta: float) -> void:
 		get_parent().add_child(newbullet)
 func _on_player_entered_body(_body):
 		hide()
-		health-=1
 	#
 	##if velocity.length()!=0:
 		##velocity=velocity.normalized()*SPEED
@@ -102,11 +105,12 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	var Canva=get_parent()
-	var Game=Canva.get_parent()
-	text=str(Game.Score)
+	var new=Canva.get_parent()
+	text=str(new.Score)
+	pass
 "
 
-[sub_resource type="GDScript" id="GDScript_28ohn"]
+[sub_resource type="GDScript" id="GDScript_e2o6t"]
 script/source = "extends Label
 
 var timer=0.0
@@ -143,17 +147,20 @@ shape = SubResource("WorldBoundaryShape2D_v20f0")
 [node name="South" type="CollisionShape2D" parent="." unique_id=2085695473]
 shape = SubResource("WorldBoundaryShape2D_3mbc6")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=70651332]
-layer = 5
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=917050371]
 
-[node name="Score" type="Label" parent="CanvasLayer" unique_id=1631986725]
-offset_right = 51.0
-offset_bottom = 45.0
+[node name="Score" type="Label" parent="CanvasLayer" unique_id=649414560]
+offset_left = 18.0
+offset_top = 9.0
+offset_right = 69.0
+offset_bottom = 54.0
 theme_override_font_sizes/font_size = 32
 text = "0"
 script = SubResource("GDScript_80nbo")
 
-[node name="Timer" type="Label" parent="CanvasLayer" unique_id=532512663]
-offset_right = 40.0
-offset_bottom = 23.0
-script = SubResource("GDScript_28ohn")
+[node name="Time" type="Label" parent="CanvasLayer" unique_id=831877635]
+offset_left = 78.0
+offset_top = 20.0
+offset_right = 118.0
+offset_bottom = 43.0
+script = SubResource("GDScript_e2o6t")
