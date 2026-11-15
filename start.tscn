@@ -13,10 +13,16 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if texture_pressed==true:
-		hide()
-		var game=
+		
 	pass
+
+
+func _on_pressed() -> void:
+	hide()
+	var Main=get_parent().get_parent().get_parent()
+	var game= preload(\"res://game.tscn\")
+	var newgame= game.instantiate()
+	Main.add_child(newgame)
 "
 
 [node name="Start" type="TextureButton" unique_id=575432727]
