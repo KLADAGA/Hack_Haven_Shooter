@@ -28,8 +28,7 @@ func _ready() -> void:
 	back_music.autoplay=true
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	#$timr+=delta
-	#$HUD/TIME.text=str(timr)
+	timr+=delta
 	if Enemy_count<5:
 		Enemy_count+=1
 		var blob = preload(\"res://blob.tscn\")
@@ -72,6 +71,8 @@ func _physics_process(delta: float) -> void:
 		newbullet.global_position = global_position+shoot_dir.normalized()*50+rand_vec.normalized()*30
 		newbullet.velocity=shoot_dir.normalized()*1000
 		get_parent().add_child(newbullet)
+	if Game.timr>360:
+		queue_free()
 func _on_player_entered_body(_body):
 		hide()
 	#
@@ -91,16 +92,106 @@ func _on_player_entered_body(_body):
 normal = Vector2(0.99997324, -0.0073124184)
 distance = -574.0817
 
+[sub_resource type="GDScript" id="GDScript_fc0e3"]
+script/source = "extends CollisionShape2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	var Game= get_parent()
+	var bullet_amount=Game.bullet_amount
+	if Game.timr>360:
+		queue_free()
+	pass
+"
+
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_u2jrr"]
 normal = Vector2(-0.99995565, 0.009415778)
 distance = -581.01953
+
+[sub_resource type="GDScript" id="GDScript_u2jrr"]
+script/source = "extends CollisionShape2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	var Game= get_parent()
+	var bullet_amount=Game.bullet_amount
+	if Game.timr>360:
+		queue_free()
+	pass
+"
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_v20f0"]
 normal = Vector2(0.007967874, 0.9999683)
 distance = -322.18497
 
+[sub_resource type="GDScript" id="GDScript_v20f0"]
+script/source = "extends CollisionShape2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	var Game= get_parent()
+	var bullet_amount=Game.bullet_amount
+	if Game.timr>360:
+		queue_free()
+	pass
+"
+
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_3mbc6"]
 distance = -324.0
+
+[sub_resource type="GDScript" id="GDScript_4p7b8"]
+script/source = "extends CollisionShape2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	var Game= get_parent()
+	var bullet_amount=Game.bullet_amount
+	if Game.timr>360:
+		queue_free()
+	pass
+"
+
+[sub_resource type="GDScript" id="GDScript_3mbc6"]
+script/source = "extends CanvasLayer
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	var Game= get_parent()
+	var bullet_amount=Game.bullet_amount
+	if Game.timr>360:
+		queue_free()
+	pass
+"
 
 [sub_resource type="GDScript" id="GDScript_4nxm4"]
 script/source = "extends Label
@@ -163,17 +254,22 @@ script = SubResource("GDScript_feb5d")
 [node name="East" type="CollisionShape2D" parent="." unique_id=611062255]
 position = Vector2(0, 1)
 shape = SubResource("WorldBoundaryShape2D_q0kka")
+script = SubResource("GDScript_fc0e3")
 
 [node name="West" type="CollisionShape2D" parent="." unique_id=1181702021]
 shape = SubResource("WorldBoundaryShape2D_u2jrr")
+script = SubResource("GDScript_u2jrr")
 
 [node name="North" type="CollisionShape2D" parent="." unique_id=759299821]
 shape = SubResource("WorldBoundaryShape2D_v20f0")
+script = SubResource("GDScript_v20f0")
 
 [node name="South" type="CollisionShape2D" parent="." unique_id=2085695473]
 shape = SubResource("WorldBoundaryShape2D_3mbc6")
+script = SubResource("GDScript_4p7b8")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=917050371]
+script = SubResource("GDScript_3mbc6")
 
 [node name="Bullets" type="Label" parent="CanvasLayer" unique_id=1610451610]
 offset_left = 153.0

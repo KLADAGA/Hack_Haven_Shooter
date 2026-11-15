@@ -1,0 +1,200 @@
+[gd_scene format=3 uid="uid://b5pqhet3ob3h1"]
+
+[ext_resource type="PackedScene" uid="uid://c0pq0balvxiws" path="res://node_2d.tscn" id="1_e2o6t"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_sm3ly"]
+rough = true
+bounce = 0.62
+
+[sub_resource type="GDScript" id="GDScript_mwb40"]
+script/source = "extends StaticBody2D
+
+@onready var start_button = $CanvasLayer/CenterContainer/Start
+
+var back_music:=AudioStreamPlayer.new()
+var Enemy_count=0
+var bullet_amount=0
+var Score=0
+var timr=0.0
+# Called when the node enters the scene tree for the first time.
+func _on_start_pressed():
+	start_button.hide()
+	new_game()
+func new_game():
+	back_music.stream=load(\"res://Bounce.wav\")
+	back_music.autoplay=true
+func _ready() -> void:
+	back_music.stream=load(\"res://Bounce.wav\")
+	back_music.autoplay=true
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	timr+=delta
+	#$HUD/TIME.text=str(timr)
+	if Enemy_count<5:
+		Enemy_count+=1
+		var blob = preload(\"res://blob.tscn\")
+		var newblob = blob.instantiate()
+		var rand_vec=Vector2.ZERO
+		rand_vec.x=(0.5-randf())*1000
+		rand_vec.y=(0.5-randf())*1000
+		newblob.global_position=global_position+rand_vec
+		add_child(newblob)
+		
+"
+
+[sub_resource type="GDScript" id="GDScript_feb5d"]
+script/source = "extends CharacterBody2D
+
+const SPEED = 10.0
+const Shoot_delay=3
+
+func _physics_process(delta: float) -> void:
+	if Input.is_action_pressed(\"left\"):
+		move_local_x(-SPEED)
+	if Input.is_action_pressed(\"right\"):
+		move_local_x(SPEED)
+	if Input.is_action_pressed(\"down\"):
+		move_local_y(SPEED)
+	if Input.is_action_pressed(\"up\"):
+		move_local_y(-SPEED)
+	
+	move_and_collide(velocity*delta)
+	var Game= get_parent()
+	var bullet_amount=Game.bullet_amount
+	if Input.is_action_pressed(\"click\")&&bullet_amount<500 :
+		Game.bullet_amount+=1
+		var shoot_dir=Vector2.ZERO
+		var rand_vec=Vector2.ZERO
+		rand_vec.x=randf()
+		rand_vec.y=randf()
+		shoot_dir=get_global_mouse_position()-global_position+rand_vec.normalized()*10
+		var bullet = preload(\"res://bullet.tscn\")
+		var newbullet = bullet.instantiate()
+		newbullet.global_position = global_position+shoot_dir.normalized()*50+rand_vec.normalized()*30
+		newbullet.velocity=shoot_dir.normalized()*1000
+		get_parent().add_child(newbullet)
+func _on_player_entered_body(_body):
+		hide()
+	#
+	##if velocity.length()!=0:
+		##velocity=velocity.normalized()*SPEED
+		##$AnimatedSprite2D.play()
+	##else:
+		##$AnimatedSprite2D.stop()
+	##
+	#
+	#move_and_slide()
+
+ 
+"
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_q0kka"]
+normal = Vector2(0.99997324, -0.0073124184)
+distance = -574.0817
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_u2jrr"]
+normal = Vector2(-0.99995565, 0.009415778)
+distance = -581.01953
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_v20f0"]
+normal = Vector2(0.007967874, 0.9999683)
+distance = -322.18497
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_3mbc6"]
+distance = -324.0
+
+[sub_resource type="GDScript" id="GDScript_4nxm4"]
+script/source = "extends Label
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	var Canva=get_parent()
+	var new=Canva.get_parent()
+	text=\"Bullets \"+str(new.bullet_amount) +\"/ 500\"
+	pass
+"
+
+[sub_resource type="GDScript" id="GDScript_e2o6t"]
+script/source = "extends Label
+
+var timer=0.0
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	timer+=delta
+	text=str(round(timer))+\"s\"
+"
+
+[sub_resource type="GDScript" id="GDScript_80nbo"]
+script/source = "extends Label
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	var Canva=get_parent()
+	var new=Canva.get_parent()
+	text=str(new.Score)
+	pass
+"
+
+[node name="Game" type="StaticBody2D" unique_id=872249596]
+top_level = true
+disable_mode = 1
+physics_material_override = SubResource("PhysicsMaterial_sm3ly")
+script = SubResource("GDScript_mwb40")
+
+[node name="Player" parent="." unique_id=1998508338 instance=ExtResource("1_e2o6t")]
+script = SubResource("GDScript_feb5d")
+
+[node name="East" type="CollisionShape2D" parent="." unique_id=611062255]
+position = Vector2(0, 1)
+shape = SubResource("WorldBoundaryShape2D_q0kka")
+
+[node name="West" type="CollisionShape2D" parent="." unique_id=1181702021]
+shape = SubResource("WorldBoundaryShape2D_u2jrr")
+
+[node name="North" type="CollisionShape2D" parent="." unique_id=759299821]
+shape = SubResource("WorldBoundaryShape2D_v20f0")
+
+[node name="South" type="CollisionShape2D" parent="." unique_id=2085695473]
+shape = SubResource("WorldBoundaryShape2D_3mbc6")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=917050371]
+
+[node name="Bullets" type="Label" parent="CanvasLayer" unique_id=1610451610]
+offset_left = 153.0
+offset_top = 20.0
+offset_right = 193.0
+offset_bottom = 43.0
+script = SubResource("GDScript_4nxm4")
+
+[node name="Time" type="Label" parent="CanvasLayer" unique_id=831877635]
+offset_left = 78.0
+offset_top = 20.0
+offset_right = 118.0
+offset_bottom = 43.0
+script = SubResource("GDScript_e2o6t")
+
+[node name="Score" type="Label" parent="CanvasLayer" unique_id=649414560]
+offset_left = 15.0
+offset_top = 6.0
+offset_right = 66.0
+offset_bottom = 51.0
+theme_override_font_sizes/font_size = 32
+text = "0"
+script = SubResource("GDScript_80nbo")
