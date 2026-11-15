@@ -15,6 +15,14 @@ run/main_scene="uid://c0pq0balvxiws"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout=""
+
+[autoload]
+
+Globals="*uid://dd8kgrbl727vl"
+
 [display]
 
 window/stretch/mode="canvas_items"
@@ -56,3 +64,14 @@ click={
 
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"
+
+[shader_globals]
+
+Enemy_count={
+"type": "int",
+"value": 0
+}
+Score={
+"type": "int",
+"value": 0
+}
