@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="PEWPEW"
-run/main_scene="uid://c0pq0balvxiws"
+run/main_scene="uid://bi2l42m6fpnnv"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
 

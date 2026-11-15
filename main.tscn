@@ -1,3 +1,19 @@
 [gd_scene format=3 uid="uid://bi2l42m6fpnnv"]
 
+[ext_resource type="PackedScene" uid="uid://dhlthq1nty3nl" path="res://start.tscn" id="1_ig7tw"]
+
 [node name="Main" type="Node2D" unique_id=305247383]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1105816930]
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer" unique_id=986044719]
+propagate_maximum_size = false
+offset_left = 187.0
+offset_top = 111.0
+offset_right = 767.0
+offset_bottom = 408.0
+
+[node name="Start" parent="CanvasLayer/CenterContainer" unique_id=575432727 instance=ExtResource("1_ig7tw")]
+layout_mode = 2
+
+[connection signal="pressed" from="CanvasLayer/CenterContainer/Start" to="CanvasLayer/CenterContainer/Start" method="_on_pressed"]

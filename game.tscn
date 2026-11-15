@@ -17,15 +17,10 @@ var bullet_amount=0
 var Score=0
 var timr=0.0
 # Called when the node enters the scene tree for the first time.
-func _on_start_pressed():
-	start_button.hide()
-	new_game()
-func new_game():
-	back_music.stream=load(\"res://Bounce.wav\")
-	back_music.autoplay=true
 func _ready() -> void:
 	back_music.stream=load(\"res://Bounce.wav\")
 	back_music.autoplay=true
+	add_child(back_music)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	timr+=delta
